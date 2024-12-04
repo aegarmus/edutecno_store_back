@@ -1,7 +1,6 @@
 import express, { urlencoded } from 'express';
-import dotenv from 'dotenv';
+import { serverInit } from './services/serverInit.js';
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,7 +10,5 @@ app.use(urlencoded({ extended: true }));
 
 
 
+serverInit(app, PORT)
 
-app.listen(PORT, () => {
-    console.log(`Servidor andando en el puerto: ${PORT} 👽`)
-})
