@@ -1,4 +1,4 @@
-import { connectDb } from "../utils/connectDB.js";
+import { connectDb } from "../utils/db/connectDB.js";
 
 
 

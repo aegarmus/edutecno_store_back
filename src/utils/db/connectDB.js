@@ -1,4 +1,4 @@
-import { query } from "../config/db.config.js"
+import { query } from "../../config/db.config.js"
 
 
 export const connectDb = async () => {
