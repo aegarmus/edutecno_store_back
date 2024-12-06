@@ -2,6 +2,7 @@ import { TableDb } from "../utils/db/createDbTables.js";
 
 import { connectDb } from '../utils/db/connectDB.js'
 import { createTableQueries } from "../utils/constants/createTablesQueries.js";
+import { DataBaseError } from "../errors/TypesError.js";
 
 
 export const initializeDB = async() => {
@@ -16,6 +17,6 @@ export const initializeDB = async() => {
         console.log(`Conexión éxitosa a PostgreSQL realizada el ${now}`);
 
     } catch (error) {
-        console.error('Error al inicializar la base de datos en PostgreSQL');
+        throw new DataBaseError('Error al inicializar la base de datos en PostgreSQL', error);
     }
 };

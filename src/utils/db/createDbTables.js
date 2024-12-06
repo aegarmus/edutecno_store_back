@@ -1,4 +1,5 @@
 import { query } from "../../config/db.config.js";
+import { DataBaseError } from "../../errors/TypesError.js";
 import { getTableDetails, tableExists } from "./confirmDetailsTables.js";
 
 export class TableDb {
@@ -16,7 +17,7 @@ export class TableDb {
           console.table(tableDetails)
   
       } catch (error) {
-          console.error(`Error al crear la tabla ${name}. ERROR: ${error}`)
+          throw new DataBaseError(`Error al crear la tabla ${name}`, error)
       }
   };
   
