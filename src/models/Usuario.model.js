@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
-import { query } from '../config/db.config.js';
 import { DataBaseError, ValidationError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
-import { createRecord } from '../utils/crud/crudUtils.js';
-
+import { createRecord, findActiveRecordById, findAllActiveRecords } from '../utils/crud/crudUtils.js';
 
 export class Usuario {
     constructor({ id, nombre, apellido_paterno, apellido_materno, email, telefono }) {
@@ -82,6 +80,25 @@ export class Usuario {
 
         } catch (error) {
             throw new DataBaseError('Error al registrar el usuario en la base de datos', error)
+        }
+    }
+
+    static async findAllActive() {
+        try {
+            const users = await findAllActiveRecords('usuarios');
+            return users;
+        } catch (error) {
+            throw new DataBaseError(`Error al obtener los registros de los usuarios en la base de datos`, error);
+        }
+    }
+
+
+    static async findActiveById(id) {
+        try {
+            const user = await findActiveRecordById('usuarios', id);
+            return user;
+        } catch (error) {
+            throw new DataBaseError(`No pudimon encontrar el usuario con el id ${id}`, error);
         }
     }
 }

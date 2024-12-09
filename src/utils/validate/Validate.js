@@ -97,5 +97,13 @@ export class Validation {
 
     return value;
   }
+
+  static isDataEmptyToDataBase(columns, values) {
+    if (values.length <= 0 || columns.length <= 0) {
+      throw new InternalServerError(`Error: no podemos crear registros vacíos`);
+    }
+
+    return { columns, values }
+  }
 }
 

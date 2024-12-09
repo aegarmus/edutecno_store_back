@@ -64,4 +64,4 @@ export const createTableQueries = [
         `,
     name: "ventas_productos",
   },
-];
+]; 
