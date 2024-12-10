@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { DataBaseError, ValidationError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
-import { createRecord, findActiveRecordById, findAllActiveRecords } from '../utils/crud/crudUtils.js';
+import { createRecord, findActiveRecordById, findAllActiveRecords, findRecordByFilters } from '../utils/crud/crudUtils.js';
 
 export class Usuario {
     constructor({ id, nombre, apellido_paterno, apellido_materno, email, telefono }) {
@@ -99,6 +99,22 @@ export class Usuario {
             return user;
         } catch (error) {
             throw new DataBaseError(`No pudimon encontrar el usuario con el id ${id}`, error);
+        }
+    }
+
+    static async find(filters, condition) {
+        try {
+            const users = await findRecordByFilters('usuarios', filters, condition);
+            return users
+        } catch (error) {
+            throw new DataBaseError(`
+                    No pudimos encontrar usuarios a traves de los filtros: 
+                    ${JSON.stringify(filters)}
+
+                    y la condición ${condition}
+                `,
+                error
+            )
         }
     }
 }

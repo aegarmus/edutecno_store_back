@@ -44,3 +44,21 @@ export const findUserActiveById = async(req, res, next) => {
         next(error)
     }
 }
+
+
+export const findUserByFilters = async(req, res, next) => {
+    try {
+        const filters = req.query;
+        const { condition } = req.body;
+
+        const users = await Usuario.find(filters, condition)
+
+        res.status(200).json({
+            message: 'Usuario encontrado con éxito',
+            status: 200,
+            data: users
+        })
+    } catch (error) {
+        next(error)
+    }
+}
