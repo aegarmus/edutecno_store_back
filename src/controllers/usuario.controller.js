@@ -1,4 +1,7 @@
+import { NotFoundError } from "../errors/TypesError.js";
 import { Usuario } from "../models/Usuario.model.js"
+import { VALID_USER_FIELD } from "../utils/constants/validateFields.js";
+import { Validation } from "../utils/validate/Validate.js";
 
 
 export const createUser = async(req, res, next) => {
@@ -18,12 +21,13 @@ export const createUser = async(req, res, next) => {
 export const findAllActiveUsers = async(req, res, next) => {
     try {
         const users = await Usuario.findAllActive();
+        const userValidate = Validation.isEmptyDataResponse(users);
 
         res.status(200).json({
-            message: 'Usuarios Encontrados con éxito',
+            message: "Usuarios Encontrados con éxito",
             status: 200,
-            data: users
-        })
+            data: userValidate,
+        });
     } catch (error) {
         next(error)
     }
@@ -34,12 +38,13 @@ export const findUserActiveById = async(req, res, next) => {
         const { id } = req.params
 
         const user = await Usuario.findActiveById(id)
+        const userValidate = Validation.isEmptyDataResponse(user);
 
         res.status(200).json({
-            message: `Usuario con ID_ ${ id} Encontrado con éxito`,
+            message: `Usuario con ID_ ${id} Encontrado con éxito`,
             status: 200,
-            data: user
-        })
+            data: userValidate,
+        });
     } catch (error) {
         next(error)
     }
@@ -51,13 +56,15 @@ export const findUserByFilters = async(req, res, next) => {
         const filters = req.query;
         const { condition } = req.body;
 
+        Validation.isValidFilter(filters, VALID_USER_FIELD)
         const users = await Usuario.find(filters, condition)
+        const userValidate = Validation.isEmptyDataResponse(users)
 
         res.status(200).json({
-            message: 'Usuario encontrado con éxito',
+            message: "Usuario encontrado con éxito",
             status: 200,
-            data: users
-        })
+            data: userValidate,
+        });
     } catch (error) {
         next(error)
     }

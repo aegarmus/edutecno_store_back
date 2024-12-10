@@ -1,4 +1,4 @@
-import { ValidationError } from "../../errors/TypesError.js"
+import { NotFoundError, ValidationError, InternalServerError, DataBaseError } from "../../errors/TypesError.js"
 
 
 export class Validation {
@@ -13,7 +13,7 @@ export class Validation {
 
   static name(value, fieldName) {
     const regex = /^[a-zA-ZÁ-ÿñÑ\s]+$/;
-    if (!regex.test(value)) {
+    if (!regex.test(value)) { 
       throw new ValidationError(
         `${fieldName} debe contener solo letras y espacios`
       );
@@ -105,5 +105,24 @@ export class Validation {
 
     return { columns, values }
   }
+
+  static isEmptyDataResponse(data) {
+    if(data.length === 0 || !data) throw new NotFoundError('No pudimos encontrar el dato solicitado')
+    return data
+  }
+
+
+  static isValidFilter(filters, validFields) {
+      const filterKeys = Object.keys(filters);
+
+      for (const key of filterKeys) {
+        if (!validFields.includes(key)) {
+          throw new DataBaseError(
+            `El campo "${key}" no es válido para esta entidad`
+          );
+        }
+      }
+  }
+
 }
 
