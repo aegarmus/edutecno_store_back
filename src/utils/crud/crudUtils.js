@@ -1,6 +1,7 @@
 import { query } from "../../config/db.config.js";
 import { InternalServerError } from "../../errors/TypesError.js";
-import { Validation } from "../validate/Validate.js";
+import { normalizeClauses, parseObjectToColumnsValuesArrays } from "../shares/normalize.js";
+
 
 
 /**
@@ -11,22 +12,20 @@ import { Validation } from "../validate/Validate.js";
  */
 export const createRecord = async(tableName, data) => { 
     try {
-        const columnsData = Object.keys(data) //Devuelve un Array con todas las Keys o claves de un objeto dado
-        const valuesData = Object.values(data) // Devuelve un Array con todos los valores de un objeto dado
+        const { columns, values } = parseObjectToColumnsValuesArrays(data)
 
-        const { columns, values } = Validation.isDataEmptyToDataBase(columnsData, valuesData)
-
-        const placeholders = columns.map((_, i) => `$${i + 1}` );
+        const valuesClauses = normalizeClauses(columns, ', ', false)
 
         const insertQuery = `
             INSERT INTO ${tableName} (${columns.join(', ')})
-            VALUES (${placeholders.join(', ')})
-            RETURNING *
+            VALUES (${valuesClauses})
+            RETURNING *;
         `
+
         const { rows } = await query(insertQuery, values);
         return rows[0];
     } catch (error) {
-        throw new InternalServerError(`Error al registrar datos en la tabla ${tableName}`);
+        throw new InternalServerError(`Error al registrar datos en la tabla ${tableName}`, error);
     }
 
 }
@@ -78,25 +77,64 @@ export const findActiveRecordById = async(tableName, id) => {
 
 export const findRecordByFilters = async(tableName, filters, condition) => {
     try {
-        const filterKeys = Object.keys(filters); //Arreglo con todas las keys del objeto
-        const filterValues = Object.values(filters);
+        const { columns, values } = parseObjectToColumnsValuesArrays(filters);
 
-        const whereClauses = filterKeys.map((key, index) => `${key} = $${index + 1}`).join(` ${condition} `);
+        const whereClauses = normalizeClauses(columns, condition, true)
         /* const whereClausesString = whereClauses.join(' ${condition} ') */
 
         const selectQuery = `
             SELECT * FROM ${tableName}
             WHERE ${whereClauses}
             `
-        const { rows } = await query(selectQuery, filterValues);
+        const { rows } = await query(selectQuery, values);
         return rows
     } catch (error) {
         throw new InternalServerError(`
                 Error al consultar la tabla ${tableName} con los filtros:
-                ${filters}
+                ${JSON.stringify(filters)}
             `,
              error
         )
     }
 }
 
+
+/**
+ * Actualiza un registro de la Base de datos a traves de su ID
+ * @param {string} tableName - Nombre de la tabla
+ * @param {string} id - ID del registro a actualizar como UUID
+ * @param {object} data - Datos que se desean actualizar en formato Objeto
+ * @returns {Promise<Object>} - Retorna el registro actualizado como Objeto
+ */
+
+export const updateRecord = async(tableName, id, data) => {
+    try {
+      const { columns, values } = parseObjectToColumnsValuesArrays(data);
+
+      /*
+        const setClauses = columns.map((column, index) => `${column} = $${index + 2}`).join(", ");
+
+        const updateQuery = `
+            UPDATE ${tableName}
+            SET ${setClauses} 
+            WHERE id = $1
+        `
+        */
+
+      const setClauses = normalizeClauses(columns, ', ', true)
+
+      const updateQuery = `
+            UPDATE ${tableName}
+            SET ${setClauses} 
+            WHERE id = $${columns.length + 1}
+            RETURNING *;
+        `;
+
+      const params = [...values, id]
+
+      const { rows } = await query(updateQuery, params)
+      return rows[0]
+    } catch (error) {
+        throw new InternalServerError('Problemas para actualizar el usuario', error);
+    }
+}

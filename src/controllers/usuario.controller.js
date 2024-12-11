@@ -69,3 +69,23 @@ export const findUserByFilters = async(req, res, next) => {
         next(error)
     }
 }
+
+
+export const updateUser = async(req, res, next) => {
+    try {
+        const { id } = req.params;
+        const data = req.body
+
+        const updatedUser = await Usuario.update(id, data)
+
+        res.status(201).json({
+            message: `Usuario Actualizado con Éxito`,
+            status: 201,
+            data: updatedUser
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
