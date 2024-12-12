@@ -80,4 +80,13 @@ export class Producto {
             throw new DataBaseError("Error al registrar el producto en la base de datos", error);
         }
     }
+
+    static async findAllActive() {
+        try {
+            const products = await findAllActiveRecords('productos');
+            return products
+        } catch (error) {
+            throw new DataBaseError(`Error al obtener todos los productos`, error)            
+        }
+    }
 }
