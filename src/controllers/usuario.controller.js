@@ -1,4 +1,4 @@
-import { NotFoundError } from "../errors/TypesError.js";
+
 import { Usuario } from "../models/Usuario.model.js"
 import { VALID_USER_FIELD } from "../utils/constants/validateFields.js";
 import { Validation } from "../utils/validate/Validate.js";

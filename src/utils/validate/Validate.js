@@ -11,6 +11,13 @@ export class Validation {
     return value;
   }
 
+  static isString(value, fieldName) {
+    if(typeof value !== "string") {
+      throw new ValidationError(`El campo "${fieldName}" debe ser una cadena de texto`);
+    }
+    return value
+  }
+
   static name(value, fieldName) {
     const regex = /^[a-zA-ZÁ-ÿñÑ\s]+$/;
     if (!regex.test(value)) { 
@@ -28,6 +35,13 @@ export class Validation {
     }
 
     return value;
+  }
+
+  static isNumber(value, fieldName) {
+    const number = Number(value);
+    if(isNaN(number)) throw new ValidationError(`${fieldName} debe ser un número`);
+
+    return number
   }
 
   static isNumberInRange(value, min, max, fieldName) {

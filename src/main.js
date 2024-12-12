@@ -2,6 +2,7 @@ import express, { urlencoded } from 'express';
 import { serverInit } from './services/serverInit.js';
 
 import UserRouter from './routes/usuario.routes.js';
+import ProductRouter from './routes/producto.routes.js'
 
 import { errorHandler } from './middlewares/error.middleware.js';
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
 app.use('/api/v1', UserRouter);
+app.use('/api/v1', ProductRouter);
 
 app.use(errorHandler)
 
