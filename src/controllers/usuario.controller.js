@@ -89,3 +89,35 @@ export const updateUser = async(req, res, next) => {
 }
 
 
+export const permaDeleteUser = async(req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const userDeleted = await Usuario.permaDelete(id);
+
+        res.status(200).json({
+            message: `Usuario Eliminado Permanentemente!`,
+            status: 200,
+            dataDeleted: userDeleted
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const softDeleteUser = async(req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const userDeleted = await Usuario.softDelete(id);
+
+        res.status(200).json({
+          message: `Usuario Eliminado con éxito`,
+          status: 200,
+          dataDeleted: userDeleted,
+        });
+    } catch (error) {
+        next(error)   
+    }
+}

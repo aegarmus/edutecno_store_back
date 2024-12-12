@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { DataBaseError, ValidationError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
-import { createRecord, findActiveRecordById, findAllActiveRecords, findRecordByFilters, updateRecord } from '../utils/crud/crudUtils.js';
+import { createRecord, findActiveRecordById, findAllActiveRecords, findRecordByFilters, permaDeleteRecord, softDeleteRecord, updateRecord } from '../utils/crud/crudUtils.js';
 
 export class Usuario {
     constructor({ id, nombre, apellido_paterno, apellido_materno, email, telefono }) {
@@ -124,6 +124,24 @@ export class Usuario {
             return updatedUser 
         } catch (error) {
             throw new DataBaseError(`No pudimos actualizar al usuario con el ID: ${id}`, error)
+        }
+    }
+
+    static async permaDelete(id) {
+        try {
+            const userDeleted = await permaDeleteRecord('usuarios', id);
+            return userDeleted
+        } catch (error) {
+            throw new DataBaseError(`No pudimos eliminar al permanentemente al usuario`, error)
+        }
+    }
+
+    static async softDelete(id) {
+        try {
+            const userDeleted = await softDeleteRecord('usuarios', id);
+            return userDeleted
+        } catch (error) {
+            throw new DataBaseError(`No pudimos eliminar al permanentemente al usuario`, error)
         }
     }
 }

@@ -25,16 +25,17 @@ export const parseObjectToColumnsValuesArrays = (data) => {
  * Construye una clausula con valores parametrizados en función de la cantidad de campos en los datos entregados
  * @param {Array<string>} columns - Columnas que se van a modificar en la query 
  * @param {string} separator - Separador de condicion o agregación en la clausula
- * @param {boolean} requireKey - Valor booleano (true/false) que determina si la clausula requiere acompañar los valores paramatrizados con una key
+ * @param {boolean} requireKey - Valor booleano (true/false) que determina si la clausula requiere acompañar los valores paramatrizados con una key. Valor por defecto true
+ * @param {number} initParam - Número con el que comenzara la cuenta de los parametros. Por defecto si no se ingresa comienza en 1
  * @returns {string} - Retorna la clausula con datos parametrizados en formato string
  */
-export const normalizeClauses = (columns, separator, requireKey) => {
+export const normalizeClauses = (columns, separator, initParam = 1, requireKey = true) => {
     try {
         let clauses = ''
 
         !requireKey
-        ? clauses = columns.map((_, i) => `$${i + 1}` ).join(`${separator}`)
-        : clauses = columns.map((key, index) => `${key} = $${index + 1}`).join(`${separator}`);
+        ? clauses = columns.map((_, i) => `$${i + initParam}` ).join(`${separator}`)
+        : clauses = columns.map((key, index) => `${key} = $${index + initParam}`).join(`${separator}`);
 
         return clauses
     } catch (error) {
