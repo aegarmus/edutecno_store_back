@@ -32,3 +32,21 @@ export const findAllActiveProducts = async(req, res, next) => {
     }
 }
 
+
+export const findActiveProductById = async(req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const product = await Producto.findActiveById(id)
+        const productValidate = Validation.isEmptyDataResponse(product);
+
+        res.status(200).json({
+            message: `Usuario con ID_ ${id} Encontrado con éxito`,
+            status: 200,
+            data: productValidate,
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}

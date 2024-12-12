@@ -89,4 +89,13 @@ export class Producto {
             throw new DataBaseError(`Error al obtener todos los productos`, error)            
         }
     }
+
+    static async findActiveById(id) {
+        try {
+            const product = await findActiveRecordById('productos', id);
+            return product
+        } catch (error) {
+            throw new DataBaseError(`Error al obtener el producto por el id: ${id}`, error);
+        }
+    }
 }
