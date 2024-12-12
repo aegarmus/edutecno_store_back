@@ -9,8 +9,23 @@ import { Validation } from "../validate/Validate.js";
 
 export const parseObjectToColumnsValuesArrays = (data) => {
     try {
-        const columnsData = Object.keys(data);
-        const valuesData = Object.values(data);
+        const columnsData = [];
+        const valuesData = [];
+
+        Object.entries(data).forEach(([key, value]) => {
+            if(Array.isArray(value)) {
+                value.forEach((val) => {
+                    columnsData.push(key);
+                    valuesData.push(val)
+                })
+            } else {
+                columnsData.push(key);
+                valuesData.push(val);
+            }
+        })
+        
+        /* const columnsData = Object.keys(data);
+        const valuesData = Object.values(data); */
 
         const { columns, values } = Validation.isDataEmptyToDataBase(columnsData, valuesData)
 
