@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { DataBaseError, ValidationError } from '../errors/TypesError.js';
 import { Validation } from '../utils/validate/Validate.js';
-import { createRecord, findActiveRecordById, findAllActiveRecords, findRecordByFilters, permaDeleteRecord, softDeleteRecord, updateRecord } from '../utils/crud/crudUtils.js';
+import { createRecord, findActiveRecordById, findAllActiveRecords, findRecordByFilters, permaDeleteRecord, softDeleteRecord, updateRecord } from '../utils/crud/index.js';
 
 export class Usuario {
     constructor({ id, nombre, apellido_paterno, apellido_materno, email, telefono }) {
