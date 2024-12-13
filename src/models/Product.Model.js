@@ -123,4 +123,31 @@ export class Producto {
       );
     }
   }
+
+  static async update(id, data) {
+      try {
+          const updateProduct = await updateRecord('productos', id, data);
+          return updateProduct
+      } catch (error) {
+          throw new DataBaseError(`No pudimos actualizar al producto con el ID: ${id}`, error);
+      }
+  }
+
+  static async permaDelete(id) {
+        try {
+            const productDeleted = await permaDeleteRecord('productos', id);
+            return productDeleted
+        } catch (error) {
+            throw new DataBaseError(`No pudimos eliminar al permanentemente el producto`, error)
+        }
+    }
+
+    static async softDelete(id) {
+        try {
+            const productDeleted = await softDeleteRecord('productos', id);
+            return productDeleted
+        } catch (error) {
+            throw new DataBaseError(`No pudimos eliminar al permanentemente el producto`, error)
+        }
+    }
 }
