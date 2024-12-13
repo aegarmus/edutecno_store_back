@@ -55,9 +55,7 @@ export const findActiveProductById = async(req, res, next) => {
 export const findProductByFilters = async(req, res, next) => {
     try {
         const filters = req.query;
-        const { condition } = req.body;
-
-        console.log(filters)
+        const { condition } = req.body; 
 
         Validation.isValidFilter(filters, VALID_PRODUCT_FIELD);
         const products = await Producto.find(filters, condition)

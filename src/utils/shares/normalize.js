@@ -14,8 +14,8 @@ export const parseObjectToColumnsValuesArrays = (data) => {
 
         Object.entries(data).forEach(([key, value]) => {
             if(Array.isArray(value)) {
+                columnsData.push(key);
                 value.forEach((val) => {
-                    columnsData.push(key);
                     valuesData.push(val)
                 })
             } else {
@@ -24,7 +24,7 @@ export const parseObjectToColumnsValuesArrays = (data) => {
             }
         })
         
-        /* const columnsData = Object.keys(data);
+/*         const columnsData = Object.keys(data);
         const valuesData = Object.values(data); */
 
         const { columns, values } = Validation.isDataEmptyToDataBase(columnsData, valuesData)
@@ -44,16 +44,45 @@ export const parseObjectToColumnsValuesArrays = (data) => {
  * @param {number} initParam - Número con el que comenzara la cuenta de los parametros. Por defecto si no se ingresa comienza en 1
  * @returns {string} - Retorna la clausula con datos parametrizados en formato string
  */
-export const normalizeClauses = (columns, separator, initParam = 1, requireKey = true) => {
+export const normalizeClauses = (columns, separator, initParam = 1, requireKey = true, filters = {}) => {
     try {
-        let clauses = ''
-
-        !requireKey
+        /* let clauses = '' */
+       /*  !requireKey
         ? clauses = columns.map((_, i) => `$${i + initParam}` ).join(`${separator}`)
         : clauses = columns.map((key, index) => `${key} = $${index + initParam}`).join(`${separator}`);
+        /* return clauses */
+
+        let clauses='';
+
+        if(!requireKey) {
+            clauses = columns.map((_, index) => `$${index + initParam}` ).join(` ${separator} `)
+        } else {
+            const clausesFilter = columns.map((key, index) => {
+                if(Array.isArray(filters[key]) && filters[key].length === 2) {
+                    return `${key} BETWEEN $${index + initParam} AND $${index + initParam + 1}`;
+                }
+
+                return `${key} = $${index + initParam}`;
+            })
+
+            clauses = clausesFilter.join(` ${separator} `)
+        }
 
         return clauses
+
     } catch (error) {
         throw new InternalServerError('Error al construir la clausula para la consulta SQL', error)
     }
 }
+
+
+/* 
+const objeto = {
+    nombre
+
+}
+
+objeto.nombre
+objeto['nombre']
+
+*/
