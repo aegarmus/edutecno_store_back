@@ -93,7 +93,7 @@ export class Usuario {
 
     static async findAllActive() {
         try {
-            const users = await findAllActiveRecords('usuarios');
+            const users = await findAllActiveRecords('usuarios', true);
             return users;
         } catch (error) {
             throw new DataBaseError(`Error al obtener los registros de los usuarios en la base de datos`, error);
@@ -103,7 +103,7 @@ export class Usuario {
 
     static async findActiveById(id) {
         try {
-            const user = await findActiveRecordById('usuarios', id);
+            const user = await findActiveRecordById('usuarios', id, true);
             return user;
         } catch (error) {
             throw new DataBaseError(`No pudimon encontrar el usuario con el id ${id}`, error);

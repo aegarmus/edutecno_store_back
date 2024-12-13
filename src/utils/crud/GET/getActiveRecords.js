@@ -7,9 +7,14 @@ import { normalizeClauses, parseObjectToColumnsValuesArrays } from "../../shares
  * @param {string} tableName - Nombre de la tabla a consultar
  * @returns {Promise<Array>} - Retorna un arreglo de forma asincrona con todos los registros activos
  */
-export const findAllActiveRecords = async (tableName) => {
+export const findAllActiveRecords = async (tableName, requireActive = false) => {
   try {
-    const selectQuery = `SELECT * FROM ${tableName} WHERE active = true;`;
+    const clauseActive = 'WHERE active = true'
+    const selectQuery = ''
+
+    requireActive 
+    ?selectQuery = `SELECT * FROM ${tableName} ${clauseActive}`
+    :selectQuery = `SELECT * FROM ${tableName}`
 
     const { rows } = await query(selectQuery);
     return rows;
@@ -27,12 +32,21 @@ export const findAllActiveRecords = async (tableName) => {
  * @param {string} id - UUID del registro que se busca
  * @returns {Promise<Object>} - Retorna un registro encontrado a partir del ID y que este activo.
  */
-export const findActiveRecordById = async (tableName, id) => {
+export const findActiveRecordById = async (tableName, id, requireActive = false) => {
   try {
-    const selectQuery = `
+    const clauseActive = "active = true";
+    const selectQuery = "";
+
+    requireActive
+      ? (selectQuery = `
             SELECT * FROM ${tableName}
-            WHERE id = $1 AND active = true
-        `;
+            WHERE id = $1 AND ${clauseActive}
+        `)
+      : (selectQuery = `
+            SELECT * FROM ${tableName}
+            WHERE id = $1
+    `);
+    
     const { rows } = await query(selectQuery, [id]);
     return rows[0];
   } catch (error) {

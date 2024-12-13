@@ -89,7 +89,7 @@ export class Producto {
 
   static async findAllActive() {
     try {
-      const products = await findAllActiveRecords("productos");
+      const products = await findAllActiveRecords("productos", true);
       return products;
     } catch (error) {
       throw new DataBaseError(`Error al obtener todos los productos`, error);
@@ -98,7 +98,7 @@ export class Producto {
 
   static async findActiveById(id) {
     try {
-      const product = await findActiveRecordById("productos", id);
+      const product = await findActiveRecordById("productos", id, true);
       return product;
     } catch (error) {
       throw new DataBaseError(
