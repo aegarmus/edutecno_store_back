@@ -1,3 +1,6 @@
+import { v4 as uuidv4 } from 'uuid'
+import { createRecord } from '../utils/crud/index.js';
+import { DataBaseError } from '../errors/TypesError.js';
 
 
 export class VentasProductos {
@@ -39,5 +42,17 @@ export class VentasProductos {
       cantidad: cantidadValida,
       subtotal: subtotalValido,
     };
+  }
+
+  static async create(data) {
+    try {
+        const id = uuidv4();
+        const ventaProductoData = { id, ...data };
+
+        const ventaProducto = await createRecord('ventas_productos', ventaProductoData);
+        return ventaProducto;
+    } catch (error) {
+        throw new DataBaseError(`Error al registrar la venta del producto`, error)
+    }
   }
 }

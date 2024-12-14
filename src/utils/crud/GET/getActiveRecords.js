@@ -10,7 +10,7 @@ import { normalizeClauses, parseObjectToColumnsValuesArrays } from "../../shares
 export const findAllActiveRecords = async (tableName, requireActive = false) => {
   try {
     const clauseActive = 'WHERE active = true'
-    const selectQuery = ''
+    let selectQuery = ''
 
     requireActive 
     ?selectQuery = `SELECT * FROM ${tableName} ${clauseActive}`
@@ -35,7 +35,7 @@ export const findAllActiveRecords = async (tableName, requireActive = false) => 
 export const findActiveRecordById = async (tableName, id, requireActive = false) => {
   try {
     const clauseActive = "active = true";
-    const selectQuery = "";
+    let selectQuery = "";
 
     requireActive
       ? (selectQuery = `

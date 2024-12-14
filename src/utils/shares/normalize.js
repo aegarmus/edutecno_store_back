@@ -20,7 +20,7 @@ export const parseObjectToColumnsValuesArrays = (data) => {
                 })
             } else {
                 columnsData.push(key);
-                valuesData.push(val);
+                valuesData.push(value);
             }
         })
         
@@ -76,13 +76,13 @@ export const normalizeClauses = (columns, separator, initParam = 1, requireKey =
 }
 
 
-/* 
-const objeto = {
-    nombre
+export const normalizeProductWithouthID = (product) => {
+    try {
+        const { id, ...rest } = product;
+        const normalizeProduct = { ...rest };
 
+        return normalizeProduct
+    } catch (error) {
+        throw new InternalServerError('Error al formatear el producto sin ID',  error);
+    }
 }
-
-objeto.nombre
-objeto['nombre']
-
-*/

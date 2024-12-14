@@ -21,3 +21,5 @@ const pool = new Pool({
  * @returns {object} - Devuelve un Objeto con los detalles del resultado de la consulta
  */
 export const query = (text, params) => pool.query(text, params);
+
+export const getClient = () => pool.connect();

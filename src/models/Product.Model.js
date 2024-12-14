@@ -10,6 +10,7 @@ import {
   softDeleteRecord,
   updateRecord,
 } from "../utils/crud/index.js";
+import { normalizeProductWithouthID } from "../utils/shares/normalize.js";
 
 
 export class Producto {
@@ -127,11 +128,29 @@ export class Producto {
   static async update(id, data) {
       try {
           const updateProduct = await updateRecord('productos', id, data);
+          console.log(updateProduct)
           return updateProduct
       } catch (error) {
           throw new DataBaseError(`No pudimos actualizar al producto con el ID: ${id}`, error);
       }
   }
+
+  static async updateStock(id, cantidad) {
+    try {
+        const product = await this.findActiveById(id);
+
+        const normalizaProduct = normalizeProductWithouthID(product);
+        
+        normalizaProduct.stock = normalizaProduct.stock - cantidad;
+
+        const updatedProduct = await this.update(id, normalizaProduct);
+
+        return updatedProduct
+    } catch (error) {
+        throw new DataBaseError('Error al modificar el stock del producto', error)
+    }
+  };
+
 
   static async permaDelete(id) {
         try {

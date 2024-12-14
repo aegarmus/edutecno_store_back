@@ -12,6 +12,7 @@ export const createRecord = async (tableName, data) => {
   try {
     const { columns, values } = parseObjectToColumnsValuesArrays(data);
 
+
     const valuesClauses = normalizeClauses(columns, ", ", 1, false);
 
     const insertQuery = `
@@ -19,10 +20,11 @@ export const createRecord = async (tableName, data) => {
             VALUES (${valuesClauses})
             RETURNING *;
         `;
-
+    console.log(values, insertQuery)
     const { rows } = await query(insertQuery, values);
     return rows[0];
   } catch (error) {
+    console.error(error)
     throw new InternalServerError(
       `Error al registrar datos en la tabla ${tableName}`,
       error

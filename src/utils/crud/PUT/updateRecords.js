@@ -15,6 +15,7 @@ import { normalizeClauses, parseObjectToColumnsValuesArrays } from "../../shares
 
 export const updateRecord = async (tableName, id, data) => {
   try {
+
     const { columns, values } = parseObjectToColumnsValuesArrays(data);
 
     /*
@@ -36,15 +37,12 @@ export const updateRecord = async (tableName, id, data) => {
             RETURNING *;
         `;
 
-    console.log(updateQuery);
-
     const params = [...values, id];
-
-    console.log(params);
 
     const { rows } = await query(updateQuery, params);
     return rows[0];
   } catch (error) {
+    console.error(error)
     throw new InternalServerError(
       "Problemas para actualizar el usuario",
       error

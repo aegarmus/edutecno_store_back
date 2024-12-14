@@ -96,6 +96,7 @@ export class Usuario {
             const users = await findAllActiveRecords('usuarios', true);
             return users;
         } catch (error) {
+            console.error(error)
             throw new DataBaseError(`Error al obtener los registros de los usuarios en la base de datos`, error);
         }
     }
